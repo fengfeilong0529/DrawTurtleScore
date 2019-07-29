@@ -1,6 +1,7 @@
-package com.example.drawturtlescore;
+package com.example.drawturtlescore.activity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.example.drawturtlescore.R;
 import com.example.drawturtlescore.adapter.PlayerRvAdapter;
 import com.example.drawturtlescore.utils.ToastUtil;
 
@@ -32,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView mRvPlayers;
     @BindView(R.id.btnAddPlayer)
     Button mBtnAddPlayer;
+    @BindView(R.id.btnStartScore)
+    Button mBtnStartScore;
 
     private PlayerRvAdapter mRvAdapter;
     private List<String> mPlayerNames = new ArrayList<>();
@@ -70,11 +74,6 @@ public class MainActivity extends AppCompatActivity {
         mRvAdapter.setEmptyView(emptyView);
     }
 
-    @OnClick(R.id.btnAddPlayer)
-    public void onViewClicked() {
-        showAddPlayerDialog();
-    }
-
     public void showAddPlayerDialog() {
         final View textEntryView = LayoutInflater.from(this).inflate(R.layout.dialog_add_player, null);
         final EditText etPlayerName = (EditText) textEntryView.findViewById(R.id.etPlayerName);
@@ -93,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         String playerName = etPlayerName.getText().toString().trim();
-                        if (TextUtils.isEmpty(playerName)){
+                        if (TextUtils.isEmpty(playerName)) {
                             ToastUtil.showToastShort(MainActivity.this, "昵称不能为空！");
                             return;
                         }
@@ -106,5 +105,17 @@ public class MainActivity extends AppCompatActivity {
                     }
                 })
                 .setCancelable(false).show();
+    }
+
+    @OnClick({R.id.btnAddPlayer, R.id.btnStartScore})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.btnAddPlayer:
+                showAddPlayerDialog();
+                break;
+            case R.id.btnStartScore:
+                startActivity(new Intent(MainActivity.this, ScoreActivity.class));
+                break;
+        }
     }
 }
